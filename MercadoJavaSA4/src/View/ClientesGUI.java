@@ -43,15 +43,6 @@ public class ClientesGUI extends JPanel {
         add(inputPanel);
         JPanel botoes = new JPanel();
         botoes.add(cadastrar = new JButton("Cadastrar"));
-        botoes.add(editar = new JButton("Editar"));
-        botoes.add(apagar = new JButton("Apagar"));
         add(botoes);
-        // tabela de clientes
-        JScrollPane jSPane = new JScrollPane();
-        add(jSPane);
-        tableModel = new DefaultTableModel(new Object[][] {},
-                new String[] { "Nome", "Endereço", "Contato", "CPF" });
-        table = new JTable(tableModel);
-        jSPane.setViewportView(table);
     }
 }

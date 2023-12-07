@@ -3,25 +3,20 @@ package View;
 import javax.swing.*;
 import java.util.*;
 import java.util.List;
+import javax.swing.table.*;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
+import java.awt.event.*;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+
 
 import Model.Estoque;
 import javafx.event.ActionEvent;
 import Control.EstoqueControl;
+import Connection.EstoqueDAO;
+
 
 public class EstoqueGUI extends JPanel {
     private JTextField inputIdProduto;
@@ -67,7 +62,7 @@ public class EstoqueGUI extends JPanel {
         add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        //botões de eventos
+        // botões de eventos
 
         EstoqueControl operacoes = new EstoqueControl(estoque, tableModel, table);
 
@@ -83,5 +78,42 @@ public class EstoqueGUI extends JPanel {
                 }
             }
         });
+
+        cadastrarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                operacoes.cadastrarProduto(inputIdProduto.getText(), inputNomeProduto.getText(),
+                        inputQuantidade.getText(), inputValorUnitario.getText());
+                inputIdProduto.setText("");
+                inputNomeProduto.setText("");
+                inputQuantidade.setText("");
+                inputValorUnitario.setText("");
+                JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto cadastrado.");
+            }
+        });
+
+        editarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                operacoes.editarProduto(linhaSelecionada, inputIdProduto.getText(), inputNomeProduto.getText(),
+                        inputQuantidade.getText(), inputValorUnitario.getText());
+                JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto editado.");
+            }
+        });
+
+        apagarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                operacoes.apagarProduto(inputIdProduto.getText());
+                JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto removido.");
+            }
+        });
+    }
+    private void atualizarTabela() {
+        estoque = new EstoqueDAO().listarTodos();
+        tableModel.setRowCount(0);
+        for (Estoque estoque : estoque) {
+            tableModel.addRow(new Object[] { estoque.getIdProduto(), estoque.getNomeProduto(), estoque.getQuantidade(), estoque.getValorUnitario() });
+        }
     }
 }

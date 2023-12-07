@@ -4,10 +4,10 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -16,33 +16,37 @@ import java.awt.GridLayout;
 import Model.Clientes;
 
 public class ClientesGUI extends JPanel {
-    private JButton cadastrar, apagar, editar;
-    private JTextField clienteNome, clienteCPF;
+    private JButton cadastrar;
+    private JTextField clienteNome, clienteCPF, cpfSearch;
     private List<Clientes> clientes;
-    private JTable table;
+    private JCheckBox vipStatus;
     private DefaultTableModel tableModel;
     private int linhaSelecionada = -1;
 
     public ClientesGUI() {
         super();
-        // entrada de dados
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(new JLabel("Histórico de Clientes"));
-        JPanel inputPanel = new JPanel();
 
-        inputPanel.setLayout(new GridLayout(5, 2));
-        inputPanel.add(new JLabel("Nome"));
+        // Painel para cadastro de clientes
+        JPanel cadastroPanel = new JPanel(new GridLayout(4, 2));
+        cadastroPanel.add(new JLabel("Nome"));
         clienteNome = new JTextField(20);
-        inputPanel.add(clienteNome);
+        cadastroPanel.add(clienteNome);
 
-        inputPanel.setLayout(new GridLayout(5, 2));
-        inputPanel.add(new JLabel("Nome"));
+        cadastroPanel.add(new JLabel("CPF"));
         clienteCPF = new JTextField(20);
-        inputPanel.add(clienteCPF);
+        cadastroPanel.add(clienteCPF);
 
-        add(inputPanel);
-        JPanel botoes = new JPanel();
-        botoes.add(cadastrar = new JButton("Cadastrar"));
-        add(botoes);
+        cadastroPanel.add(new JLabel("Status VIP"));
+        vipStatus = new JCheckBox("VIP");
+        cadastroPanel.add(vipStatus);
+
+        // Painel para botões
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(cadastrar = new JButton("Cadastrar"));
+
+        add(new JLabel("Histórico de Clientes"));
+        add(cadastroPanel);
+        add(buttonPanel);
     }
 }

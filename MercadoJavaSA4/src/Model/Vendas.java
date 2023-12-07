@@ -4,10 +4,10 @@ public class Vendas {
     private String id;
     private String data;
     private String quantidadeVendida;
-    private boolean valor;
+    private String valor;
     private int cpf;
 
-    public Vendas(String id, String data, String quantidadeVendida, boolean valor, int cpf) {
+    public Vendas(String id, String data, String quantidadeVendida, String valor, int cpf) {
         this.id = id;
         this.data = data;
         this.quantidadeVendida = quantidadeVendida;
@@ -39,14 +39,6 @@ public class Vendas {
         this.quantidadeVendida = quantidadeVendida;
     }
 
-    public boolean isValor() {
-        return valor;
-    }
-
-    public void setValor(boolean valor) {
-        this.valor = valor;
-    }
-
     public int getCpf() {
         return cpf;
     }
@@ -54,5 +46,15 @@ public class Vendas {
     public void setCpf(int cpf) {
         this.cpf = cpf;
     }
+
+    public String getValor() {
+        return valor;
+    }
+
+    public void setValor(String valor) {
+        this.valor = valor;
+    }
+
+    
 
 }

@@ -17,7 +17,7 @@ import Model.Clientes;
 
 public class ClientesGUI extends JPanel {
     private JButton cadastrar, apagar, editar;
-    private JTextField clintNome, clintCPF;
+    private JTextField clienteNome, clienteCPF;
     private List<Clientes> clientes;
     private JTable table;
     private DefaultTableModel tableModel;
@@ -32,13 +32,13 @@ public class ClientesGUI extends JPanel {
 
         inputPanel.setLayout(new GridLayout(5, 2));
         inputPanel.add(new JLabel("Nome"));
-        clintNome = new JTextField(20);
-        inputPanel.add(clintNome);
+        clienteNome = new JTextField(20);
+        inputPanel.add(clienteNome);
 
         inputPanel.setLayout(new GridLayout(5, 2));
         inputPanel.add(new JLabel("Nome"));
-        clintCPF = new JTextField(20);
-        inputPanel.add(clintCPF);
+        clienteCPF = new JTextField(20);
+        inputPanel.add(clienteCPF);
 
         add(inputPanel);
         JPanel botoes = new JPanel();

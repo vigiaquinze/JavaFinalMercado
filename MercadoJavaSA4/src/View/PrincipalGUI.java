@@ -13,7 +13,9 @@ public class PrincipalGUI extends JFrame {
         // criandos as tabs
         // tab1 carros
         VendasGUI tab1 = new VendasGUI();
+        EstoqueGUI tab2 = new EstoqueGUI();
         jTPane.add("Vendas", tab1);
+        jTPane.add("estoque", tab2);
         setBounds(100, 100, 600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

@@ -6,7 +6,6 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -15,12 +14,8 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import Model.Estoque;
-import javafx.event.ActionEvent;
-import Control.EstoqueControl;
 
 public class EstoqueGUI extends JPanel {
     private JTextField inputIdProduto;
@@ -64,22 +59,5 @@ public class EstoqueGUI extends JPanel {
         setLayout(new BorderLayout());
         add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
-
-        //botões de eventos
-
-        EstoqueControl operacoes = new EstoqueControl(estoque, tableModel, table);
-
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent evt) {
-                linhaSelecionada = table.rowAtPoint(evt.getPoint());
-                if (linhaSelecionada != -1) {
-                    inputIdProduto.setText((String) table.getValueAt(linhaSelecionada, 0));
-                    inputNomeProduto.setText((String) table.getValueAt(linhaSelecionada, 1));
-                    inputQuantidade.setText((String) table.getValueAt(linhaSelecionada, 2));
-                    inputValorUnitario.setText((String) table.getValueAt(linhaSelecionada, 3));
-                }
-            }
-        });
     }
 }

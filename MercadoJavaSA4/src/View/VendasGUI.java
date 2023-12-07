@@ -15,7 +15,7 @@ import java.awt.GridLayout;
 
 import Model.Vendas;
 
-public class VendasGUI {
+public class VendasGUI extends JPanel {
     public VendasGUI() {
     }
 }

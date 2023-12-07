@@ -10,11 +10,13 @@ public class EstoqueControl {
     private String nomeProduto;
     private String quantidade;
     private boolean perecivel;
-    public EstoqueControl(String idProduto, String nomeProduto, String quantidade, boolean perecivel) {
+    private String valorUnitario;
+    public EstoqueControl(String idProduto, String nomeProduto, String quantidade, boolean perecivel, String valorUnitario) {
         this.idProduto = idProduto;
         this.nomeProduto = nomeProduto;
         this.quantidade = quantidade;
         this.perecivel = perecivel;
+        this.valorUnitario = valorUnitario;
     }
     public String getIdProduto() {
         return idProduto;
@@ -40,5 +42,10 @@ public class EstoqueControl {
     public void setPerecivel(boolean perecivel) {
         this.perecivel = perecivel;
     }
-    
+    public String getValorUnitario() {
+        return valorUnitario;
+    }
+    public void setValorUnitario(String valorUnitario) {
+        this.valorUnitario = valorUnitario;
+    }
 }

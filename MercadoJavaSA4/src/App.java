@@ -1,7 +1,7 @@
-import View.PrincipalGUI;
+import View.MainFrame;
 
 public class App {
-    public static void main(String[] args) {
-        new PrincipalGUI().run();
+    public static void main(String[] args) throws Exception {
+        new MainFrame().run();
     }
 }

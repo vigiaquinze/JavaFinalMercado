@@ -4,13 +4,11 @@ public class Estoque {
     private String idProduto;
     private String nomeProduto;
     private String quantidade;
-    private boolean perecivel;
     private String valorUnitario;
-    public Estoque(String idProduto, String nomeProduto, String quantidade, boolean perecivel, String valorUnitario) {
+    public Estoque(String idProduto, String nomeProduto, String quantidade, String valorUnitario) {
         this.idProduto = idProduto;
         this.nomeProduto = nomeProduto;
         this.quantidade = quantidade;
-        this.perecivel = perecivel;
         this.valorUnitario = valorUnitario;
     }
     public String getIdProduto() {
@@ -30,12 +28,6 @@ public class Estoque {
     }
     public void setQuantidade(String quantidade) {
         this.quantidade = quantidade;
-    }
-    public boolean isPerecivel() {
-        return perecivel;
-    }
-    public void setPerecivel(boolean perecivel) {
-        this.perecivel = perecivel;
     }
     public String getValorUnitario() {
         return valorUnitario;

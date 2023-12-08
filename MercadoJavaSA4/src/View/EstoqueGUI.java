@@ -8,12 +8,12 @@ import javax.swing.table.*;
 import java.awt.event.*;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.io.*;
 
 
 import Model.Estoque;
-import javafx.event.ActionEvent;
+
 import Control.EstoqueControl;
 import Connection.EstoqueDAO;
 
@@ -35,6 +35,7 @@ public class EstoqueGUI extends JPanel {
         tableModel.addColumn("Nome");
         tableModel.addColumn("Quantidade");
         tableModel.addColumn("Valor Unitário");
+        
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         // criando os métodos de entrada de dados (input)
@@ -42,6 +43,7 @@ public class EstoqueGUI extends JPanel {
         inputNomeProduto = new JTextField(20);
         inputQuantidade = new JTextField(10);
         inputValorUnitario = new JTextField(10);
+
         cadastrarButton = new JButton("Cadastrar");
         editarButton = new JButton("Editar");
         apagarButton = new JButton("Apagar");
@@ -55,9 +57,13 @@ public class EstoqueGUI extends JPanel {
         inputPanel.add(inputQuantidade);
         inputPanel.add(new JLabel("Valor:"));
         inputPanel.add(inputValorUnitario);
+
         inputPanel.add(cadastrarButton);
         inputPanel.add(editarButton);
         inputPanel.add(apagarButton);
+
+        atualizarTabela();
+
         setLayout(new BorderLayout());
         add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
@@ -103,7 +109,7 @@ public class EstoqueGUI extends JPanel {
 
         apagarButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent ev) {
                 operacoes.apagarProduto(inputIdProduto.getText());
                 JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto removido.");
             }

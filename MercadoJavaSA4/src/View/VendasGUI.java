@@ -186,6 +186,7 @@ public class VendasGUI extends JPanel {
 
         // Atualiza a tabela com os produtos comprados
         atualizarTabelaCompras(clienteNome);
+        
 
         // Limpa os campos após a compra
         nomeProduto.setText("");

@@ -11,7 +11,6 @@ public class MainFrame extends JFrame {
         JTabbedPane abas = new JTabbedPane();
         abas.add("Estoque", new EstoqueGUI());
         abas.add("Vendas", new VendasGUI());
-        abas.add("Clientes", new ClientesGUI());
         add(abas);
     }
 

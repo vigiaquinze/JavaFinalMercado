@@ -21,6 +21,7 @@ public class VendasGUI extends JPanel {
     private List<Cliente> clientes;
     private List<Produto> produtosComprados;
     private JTextField valorFinalField;
+    
 
     public VendasGUI() {
         super();

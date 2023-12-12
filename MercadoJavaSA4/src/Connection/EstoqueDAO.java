@@ -42,14 +42,14 @@ public class EstoqueDAO {
         ResultSet rs = null;
         // Declaração do objeto ResultSet para armazenar os resultados da consulta
         estoque = new ArrayList<>();
-        // Cria uma lista para armazenar os Usuarios recuperados do banco de dados
+        // Cria uma lista para armazenar os produtos recuperados do banco de dados
         try {
             stmt = connection.prepareStatement("SELECT * FROM produtos_supermercado");
             // Prepara a consulta SQL para selecionar todos os registros da tabela
             rs = stmt.executeQuery();
             // Executa a consulta e armazena os resultados no ResultSet
             while (rs.next()) {
-                // Para cada registro no ResultSet, cria um objeto Usuarios com os valores do
+                // Para cada registro no ResultSet, cria um objeto produtos com os valores do
                 // registro
                 Estoque produtos = new Estoque(
                         rs.getString("idProduto"),
@@ -57,7 +57,7 @@ public class EstoqueDAO {
                         rs.getString("quantidade"),
                         rs.getString("valorUnitario")
                         );
-                estoque.add(produtos); // Adiciona o objeto Usuarios à lista de Usuarios
+                estoque.add(produtos); // Adiciona o objeto produtos à lista de estoque
             }
         } catch (SQLException ex) {
             System.out.println(ex); // Em caso de erro durante a consulta, imprime o erro
@@ -66,20 +66,20 @@ public class EstoqueDAO {
 
             // Fecha a conexão, o PreparedStatement e o ResultSet
         }
-        return estoque; // Retorna a lista de Usuarios recuperados do banco de dados
+        return estoque; // Retorna a lista de estoque recuperado do banco de dados
     }
 
-    // Cadastrar usuario no banco
+    // Cadastrar produto no banco
     public void cadastrar(String idProduto, String nomeProduto, String quantidade, String valorUnitario) {
         PreparedStatement stmt = null;
         // Define a instrução SQL parametrizada para cadastrar na tabela
         String sql = "INSERT INTO produtos_supermercado (idProduto, nomeProduto, quantidade, valorUnitario) VALUES (?, ?, ?, ?)";
         try {
             stmt = connection.prepareStatement(sql);
-            stmt.setString(1, idProduto);
-            stmt.setString(2, nomeProduto);
-            stmt.setString(3, quantidade);
-            stmt.setString(4, valorUnitario);
+            stmt.setString(1, idProduto.trim());
+            stmt.setString(2, nomeProduto.trim().toUpperCase());
+            stmt.setString(3, quantidade.trim());
+            stmt.setString(4, valorUnitario.trim());
             stmt.executeUpdate();
             System.out.println("Dados inseridos com sucesso");
         } catch (SQLException e) {
@@ -96,11 +96,10 @@ public class EstoqueDAO {
         String sql = "UPDATE produtos_supermercado SET nomeProduto = ?, quantidade = ?, valorUnitario = ? WHERE idProduto = ?";
         try {
             stmt = connection.prepareStatement(sql);
-            //placa é chave primária e não pode ser alterada
-            stmt.setString(1, idProduto);
-            stmt.setString(2, nomeProduto);
-            stmt.setString(3, quantidade);
-            stmt.setString(4, valorUnitario);
+            stmt.setString(1, idProduto.trim());
+            stmt.setString(2, nomeProduto.trim().toUpperCase());
+            stmt.setString(3, quantidade.trim());
+            stmt.setString(4, valorUnitario.trim());
             stmt.executeUpdate();
             System.out.println("Dados atualizados com sucesso");
         } catch (SQLException e) {
@@ -113,7 +112,7 @@ public class EstoqueDAO {
     // Apagar dados do banco
     public void apagar(String idProduto) {
         PreparedStatement stmt = null;
-        // Define a instrução SQL parametrizada para apagar dados pela placa
+        // Define a instrução SQL parametrizada para apagar dados pela id do produto
         String sql = "DELETE FROM produtos_supermercado WHERE idProduto = ?";
         try {
             stmt = connection.prepareStatement(sql);

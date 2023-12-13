@@ -8,9 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import Control.EstoqueControl;
 import Model.Estoque;
-import View.EstoqueGUI;
 
 public class EstoqueDAO {
     private Connection connection;

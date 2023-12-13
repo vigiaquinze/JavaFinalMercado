@@ -5,14 +5,12 @@ public class Vendas {
     private String data;
     private String quantidadeVendida;
     private String valor;
-    private int cpf;
 
-    public Vendas(String id, String data, String quantidadeVendida, String valor, int cpf) {
+    public Vendas(String id, String data, String quantidadeVendida, String valor) {
         this.id = id;
         this.data = data;
         this.quantidadeVendida = quantidadeVendida;
         this.valor = valor;
-        this.cpf = cpf;
     }
 
     public String getId() {
@@ -37,14 +35,6 @@ public class Vendas {
 
     public void setQuantidadeVendida(String quantidadeVendida) {
         this.quantidadeVendida = quantidadeVendida;
-    }
-
-    public int getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(int cpf) {
-        this.cpf = cpf;
     }
 
     public String getValor() {

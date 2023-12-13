@@ -1,4 +1,4 @@
-# [SITUAÇÃO DE APRENDIZAGEM 6 - SUPERMERCADO]
+# SITUAÇÃO DE APRENDIZAGEM 6 - SUPERMERCADO
 
 ## Introdução
 Nesta situação de aprendizagem procuramos criar uma aplicação bem simples de um supermercado, utilizando aspectos básicos de funcionalidade e design, sendo o mais simples possível para o administrador/usuário da aplicação.

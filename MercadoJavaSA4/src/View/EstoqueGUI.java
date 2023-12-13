@@ -27,6 +27,7 @@ public class EstoqueGUI extends JPanel {
     private JButton cadastrarButton, atualizarButton, editarButton, apagarButton;
 
     public EstoqueGUI() {
+        //Criando a tabela e adicionando as colunas
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
@@ -34,29 +35,38 @@ public class EstoqueGUI extends JPanel {
         tableModel.addColumn("Valor Unitário");
 
         table = new JTable(tableModel);
+
         JScrollPane scrollPane = new JScrollPane(table);
+
         // criando os métodos de entrada de dados (input)
         inputIdProduto = new JTextField(10);
         inputNomeProduto = new JTextField(20);
         inputQuantidade = new JTextField(10);
         inputValorUnitario = new JTextField(10);
 
+        //Adicionando os botões
         cadastrarButton = new JButton("Cadastrar");
         atualizarButton = new JButton("Atualizar");
         editarButton = new JButton("Editar");
         apagarButton = new JButton("Apagar");
 
-        cadastrarButton.setBackground(new Color(0, 125, 0));
-        atualizarButton.setBackground(new Color(100, 100, 100));
-        editarButton.setBackground(new Color(50, 50, 50));
-        apagarButton.setBackground(new Color(255, 0, 0));
+        //Estilizando os botões
+        cadastrarButton.setBackground(new Color(8, 24, 20));
+        atualizarButton.setBackground(new Color(201, 168, 82));
+        editarButton.setBackground(new Color(136, 114, 58));
+        apagarButton.setBackground(new Color(239, 97, 49));
 
         cadastrarButton.setForeground(new Color(255, 255, 255));
         atualizarButton.setForeground(new Color(255, 255, 255));
         editarButton.setForeground(new Color(255, 255, 255));
         apagarButton.setForeground(new Color(255, 255, 255));
 
-        // adicionando os inputs
+        cadastrarButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        atualizarButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        editarButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        apagarButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+        //Adicionando os inputs
         JPanel inputPanel = new JPanel();
         inputPanel.add(new JLabel("ID:"));
         inputPanel.add(inputIdProduto);
@@ -67,6 +77,18 @@ public class EstoqueGUI extends JPanel {
         inputPanel.add(new JLabel("Valor: R$"));
         inputPanel.add(inputValorUnitario);
 
+        //Estilizando os inputs
+        inputPanel.setBackground(new Color (139, 234, 210));
+        inputIdProduto.setBackground(new Color (89, 184, 160));
+        inputIdProduto.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        inputNomeProduto.setBackground(new Color (89, 184, 160));
+        inputNomeProduto.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        inputQuantidade.setBackground(new Color (89, 184, 160));
+        inputQuantidade.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        inputValorUnitario.setBackground(new Color (89, 184, 160));
+        inputValorUnitario.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+        //Adicionando os botões ao painel de inputs
         inputPanel.add(cadastrarButton);
         inputPanel.add(atualizarButton);
         inputPanel.add(editarButton);
@@ -74,12 +96,12 @@ public class EstoqueGUI extends JPanel {
 
         atualizarTabela();
 
+        //Definindo o Layout
         setLayout(new BorderLayout());
         add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        // botões de eventos
-
+        //Botões de eventos
         EstoqueControl operacoes = new EstoqueControl(estoque, tableModel, table);
 
         table.addMouseListener(new MouseAdapter() {

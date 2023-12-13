@@ -2,54 +2,51 @@ package View;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import Model.Cliente;
+
 public class VendasGUI extends JPanel {
-    private JButton comprar, buscarVip, cadastrarCliente, listarClientes, finalizarCompra;
+    private JButton comprar, cadastrarCliente, listarClientes;
     private JTextField nomeProduto, idProduto, valorProduto, dataCompra, quantidadeVendida, cpfCliente;
     private DefaultTableModel tableModel;
     private JTable tabelaCompras;
     private List<Cliente> clientes;
-    private List<Produto> produtosComprados;
-    private JTextField valorFinalField;
-    
 
     public VendasGUI() {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        // Inicializa a lista de clientes e produtos comprados
+        // Inicializa a lista de clientes
         clientes = new ArrayList<>();
-        produtosComprados = new ArrayList<>();
 
         // Painel para botões
         JPanel buttonPanel = new JPanel();
         comprar = new JButton("Comprar");
-        buscarVip = new JButton("Buscar Cliente VIP");
         cadastrarCliente = new JButton("Cadastrar Cliente");
         listarClientes = new JButton("Listar Clientes");
-        finalizarCompra = new JButton("Finalizar Compra");
-
         buttonPanel.add(comprar);
-        buttonPanel.add(buscarVip);
         buttonPanel.add(cadastrarCliente);
         buttonPanel.add(listarClientes);
-        buttonPanel.add(finalizarCompra);
 
         // Painel para CPF do cliente
-        JPanel cpfPanel = new JPanel(new GridLayout(1, 2));
+        JPanel cpfPanel = new JPanel(new GridLayout(1, 3)); // Aumente para 3 colunas
         cpfPanel.add(new JLabel("CPF do Cliente"));
         cpfCliente = new JTextField(20);
         cpfPanel.add(cpfCliente);
+
+        // Adicione um JLabel para a palavra "VIP"
+        JLabel labelVip = new JLabel("VIP");
+        labelVip.setForeground(Color.RED); // Defina a cor vermelha
+        cpfPanel.add(labelVip);
 
         // Painel para informações de produtos
         JPanel produtoPanel = new JPanel(new GridLayout(5, 2));
@@ -67,15 +64,6 @@ public class VendasGUI extends JPanel {
 
         produtoPanel.add(new JLabel("Data da Compra"));
         dataCompra = new JTextField(20);
-        // Adiciona um ouvinte de clique duplo para incrementar a data ao dar dois cliques
-        dataCompra.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    incrementarData();
-                }
-            }
-        });
         produtoPanel.add(dataCompra);
 
         produtoPanel.add(new JLabel("Quantidade Vendida"));
@@ -93,26 +81,11 @@ public class VendasGUI extends JPanel {
         tabelaCompras = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(tabelaCompras);
 
-        // Campo para exibir o valor final
-        JPanel valorFinalPanel = new JPanel(new GridLayout(1, 2));
-        valorFinalPanel.add(new JLabel("Valor Final a Pagar"));
-        valorFinalField = new JTextField(20);
-        valorFinalField.setEditable(false);
-        valorFinalPanel.add(valorFinalField);
-
         // Ação do botão "Comprar"
         comprar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 adicionarCompraNaTabela();
-            }
-        });
-
-        // Ação do botão "Buscar Cliente VIP"
-        buscarVip.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buscarClienteVipPorCpf();
             }
         });
 
@@ -132,11 +105,14 @@ public class VendasGUI extends JPanel {
             }
         });
 
-        // Ação do botão "Finalizar Compra"
-        finalizarCompra.addActionListener(new ActionListener() {
+        // Dois cliques para inserir a data do dia
+        dataCompra.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                finalizarCompra();
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    dataCompra.setText(dateFormat.format(new Date()));
+                }
             }
         });
 
@@ -147,47 +123,45 @@ public class VendasGUI extends JPanel {
         add(produtoPanel);
         add(new JLabel("Tabela de Compras"));
         add(scrollPane);
-        add(valorFinalPanel);
-    }
-
-    private void finalizarCompra() {
-        // Aplica desconto ao finalizar a compra
-        double total = calcularTotalAPagar();
-        // Exibe o valor final na interface
-        DecimalFormat df = new DecimalFormat("#.##");
-        valorFinalField.setText(df.format(total));
-    }
-
-    private double calcularTotalAPagar() {
-        double total = 0;
-
-        // Soma o valor total de cada produto
-        for (Produto produto : produtosComprados) {
-            total += produto.getTotal();
-        }
-
-        // Aplica descontos adicionais conforme necessário
-
-        return total;
     }
 
     private void adicionarCompraNaTabela() {
         String produto = nomeProduto.getText();
         String idProdutoText = idProduto.getText();
-        double valorProdutoDouble = Double.parseDouble(valorProduto.getText());
+        double valorProdutoDouble;
+        try {
+            // Não permitir letras no preço, mas aceitar números com vírgula e converter
+            // para Reais
+            valorProdutoDouble = Double.parseDouble(valorProduto.getText().replace(",", "."));
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Digite um valor válido para o produto.", "Erro",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         String dataCompraText = dataCompra.getText();
-        int quantidadeVendidaInt = Integer.parseInt(quantidadeVendida.getText());
+        int quantidadeVendidaInt;
+        try {
+            // Não permitir vírgula no número de produtos vendidos
+            quantidadeVendidaInt = Integer.parseInt(quantidadeVendida.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Digite uma quantidade válida para o produto.", "Erro",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         String clienteNome = buscarNomeClientePorCpf(cpfCliente.getText());
+        Cliente cliente = buscarClientePorCpf(cpfCliente.getText());
+
+        // Verifica se o cliente é VIP e reduz o preço pela metade
+        if (cliente != null && cliente.isVip()) {
+            valorProdutoDouble /= 2;
+        }
 
         // Calcula o valor total da compra
         double valorTotal = valorProdutoDouble * quantidadeVendidaInt;
 
-        // Adiciona o produto à lista de produtos comprados
-        produtosComprados.add(new Produto(produto, idProdutoText, valorProdutoDouble, quantidadeVendidaInt, valorTotal));
-
-        // Atualiza a tabela com os produtos comprados
-        atualizarTabelaCompras(clienteNome);
-        
+        // Adiciona a compra na tabela
+        tableModel.addRow(new Object[] { clienteNome + (cliente.isVip() ? " VIP" : ""), produto, idProdutoText,
+                formatarMoeda(valorProdutoDouble), quantidadeVendidaInt, formatarMoeda(valorTotal) });
 
         // Limpa os campos após a compra
         nomeProduto.setText("");
@@ -198,14 +172,9 @@ public class VendasGUI extends JPanel {
         cpfCliente.setText("");
     }
 
-    private void atualizarTabelaCompras(String clienteNome) {
-        // Limpa a tabela
-        tableModel.setRowCount(0);
-
-        // Adiciona os produtos comprados à tabela
-        for (Produto produto : produtosComprados) {
-            tableModel.addRow(new Object[]{clienteNome, produto.getNome(), produto.getId(), produto.getPrecoUnitario(), produto.getQuantidade(), produto.getTotal()});
-        }
+    private String formatarMoeda(double valor) {
+        DecimalFormat formatoMoeda = new DecimalFormat("R$ #,##0.00");
+        return formatoMoeda.format(valor);
     }
 
     private void buscarClienteVipPorCpf() {
@@ -214,23 +183,28 @@ public class VendasGUI extends JPanel {
 
         if (cliente != null) {
             if (cliente.isVip()) {
-                JOptionPane.showMessageDialog(this, "Cliente VIP encontrado! O preço será reduzido pela metade.", "Cliente VIP", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Cliente VIP encontrado! O preço será reduzido pela metade.",
+                        "Cliente VIP", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Cliente não é VIP.", "Cliente Não VIP", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Cliente não é VIP.", "Cliente Não VIP",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Cliente não encontrado.", "Cliente Não Encontrado", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Cliente não encontrado.", "Cliente Não Encontrado",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
     private void cadastrarNovoCliente() {
         String nome = JOptionPane.showInputDialog(this, "Digite o nome do cliente:");
         String cpf = JOptionPane.showInputDialog(this, "Digite o CPF do cliente:");
-        boolean vip = JOptionPane.showConfirmDialog(this, "O cliente é VIP?", "Cadastro de Cliente", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+        boolean vip = JOptionPane.showConfirmDialog(this, "O cliente é VIP?", "Cadastro de Cliente",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
 
         if (nome != null && cpf != null) {
             clientes.add(new Cliente(nome, cpf, vip));
-            JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!", "Cadastro de Cliente", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!", "Cadastro de Cliente",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -256,20 +230,12 @@ public class VendasGUI extends JPanel {
         StringBuilder clientesInfo = new StringBuilder("Clientes Cadastrados:\n");
 
         for (Cliente cliente : clientes) {
-            clientesInfo.append("CPF: ").append(cliente.getCpf()).append(", Nome: ").append(cliente.getNome()).append("\n");
+            clientesInfo.append("CPF: ").append(cliente.getCpf()).append(", Nome: ").append(cliente.getNome())
+                    .append(", VIP: ").append(cliente.isVip() ? "Sim" : "Não").append("\n");
         }
 
-        JOptionPane.showMessageDialog(this, clientesInfo.toString(), "Lista de Clientes", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void incrementarData() {
-        // Obtém a data atual
-        Date dataAtual = new Date();
-        // Adiciona um dia à data atual
-        dataAtual.setDate(dataAtual.getDate() + 1);
-        // Atualiza o campo de data com a nova data
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        dataCompra.setText(sdf.format(dataAtual));
+        JOptionPane.showMessageDialog(this, clientesInfo.toString(), "Lista de Clientes",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
@@ -278,65 +244,5 @@ public class VendasGUI extends JPanel {
         frame.getContentPane().add(new VendasGUI());
         frame.pack();
         frame.setVisible(true);
-    }
-
-    private static class Cliente {
-        private String nome;
-        private String cpf;
-        private boolean vip;
-
-        public Cliente(String nome, String cpf, boolean vip) {
-            this.nome = nome;
-            this.cpf = cpf;
-            this.vip = vip;
-        }
-
-        public String getCpf() {
-            return cpf;
-        }
-
-        public String getNome() {
-            return nome;
-        }
-
-        public boolean isVip() {
-            return vip;
-        }
-    }
-
-    private static class Produto {
-        private String nome;
-        private String id;
-        private double precoUnitario;
-        private int quantidade;
-        private double total;
-
-        public Produto(String nome, String id, double precoUnitario, int quantidade, double total) {
-            this.nome = nome;
-            this.id = id;
-            this.precoUnitario = precoUnitario;
-            this.quantidade = quantidade;
-            this.total = total;
-        }
-
-        public String getNome() {
-            return nome;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public double getPrecoUnitario() {
-            return precoUnitario;
-        }
-
-        public int getQuantidade() {
-            return quantidade;
-        }
-
-        public double getTotal() {
-            return total;
-        }
     }
 }

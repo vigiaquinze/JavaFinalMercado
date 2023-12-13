@@ -14,8 +14,14 @@ Para a criação do banco de dados, tendo todos os métodos do método CRUD.
 Para baixar o projeto, utilizar o código git abaixo:
 
 ```bash
-# Exemplo de comandos para instalação
 git clone https://github.com/vigiaquinze/JavaFinalMercado
+
+```
+
+Para abrir o projeto, utilizar o código Git abaixo:
+Por favor, note: O PGAdmin (administrador do banco de dados) deve estar aberto, caso não esteja, acontecerá um erro.
+```bash
 cd MercadoJavaSA4
+cd src
 javac App.java
 java App

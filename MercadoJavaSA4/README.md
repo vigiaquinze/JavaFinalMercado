@@ -1,18 +1,28 @@
-## Getting Started
+# SITUAÇÃO DE APRENDIZAGEM 6 - SUPERMERCADO
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Introdução
+Nesta situação de aprendizagem procuramos criar uma aplicação bem simples de um supermercado, utilizando aspectos básicos de funcionalidade e design, sendo o mais simples possível para o administrador/usuário da aplicação.
 
-## Folder Structure
+## Desenvolvimento
+Utilizamos métodos de design de layout em Java já utilizados anteriormente em outros projetos de POO, como o GridLayout e o BorderLayout. Utilizamos também cores de fundo para cada botão e funcionalidade baseados em uma paleta de cores, criando uma aplicação atrativa e fácil de usar.
 
-The workspace contains two folders by default, where:
+### Tecnologias Utilizadas
+#### PostGreSQL e PGAdmin
+Para a criação do banco de dados, tendo todos os métodos do método CRUD.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Instalação
+Para baixar o projeto, utilizar o código git abaixo:
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+```bash
+git clone https://github.com/vigiaquinze/JavaFinalMercado
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+```
 
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Para abrir o projeto, utilizar o código Git abaixo:
+```bash
+cd MercadoJavaSA4
+cd src
+javac App.java
+java App
+```
+#### Por favor, note: O PGAdmin (administrador do banco de dados) deve estar aberto, caso não esteja, acontecerá um erro.

@@ -24,7 +24,7 @@ public class EstoqueGUI extends JPanel {
     private JTable table;
     private List<Estoque> estoque = new ArrayList<>();
     private int linhaSelecionada = -1;
-    private JButton cadastrarButton, editarButton, apagarButton;
+    private JButton cadastrarButton, atualizarButton, editarButton, apagarButton;
 
     public EstoqueGUI() {
         tableModel = new DefaultTableModel();
@@ -42,8 +42,20 @@ public class EstoqueGUI extends JPanel {
         inputValorUnitario = new JTextField(10);
 
         cadastrarButton = new JButton("Cadastrar");
+        atualizarButton = new JButton("Atualizar");
         editarButton = new JButton("Editar");
         apagarButton = new JButton("Apagar");
+
+        cadastrarButton.setBackground(new Color(0, 125, 0));
+        atualizarButton.setBackground(new Color(100, 100, 100));
+        editarButton.setBackground(new Color(50, 50, 50));
+        apagarButton.setBackground(new Color(255, 0, 0));
+
+        cadastrarButton.setForeground(new Color(255, 255, 255));
+        atualizarButton.setForeground(new Color(255, 255, 255));
+        editarButton.setForeground(new Color(255, 255, 255));
+        apagarButton.setForeground(new Color(255, 255, 255));
+
         // adicionando os inputs
         JPanel inputPanel = new JPanel();
         inputPanel.add(new JLabel("ID:"));
@@ -56,6 +68,7 @@ public class EstoqueGUI extends JPanel {
         inputPanel.add(inputValorUnitario);
 
         inputPanel.add(cadastrarButton);
+        inputPanel.add(atualizarButton);
         inputPanel.add(editarButton);
         inputPanel.add(apagarButton);
 
@@ -90,7 +103,8 @@ public class EstoqueGUI extends JPanel {
                             && operacoes.idJaCadastrada(inputIdProduto.getText())
                             && operacoes.validarValor(inputValorUnitario.getText())) {
                         // Se a id não estiver cadastrada, realiza o cadastro
-                        operacoes.cadastrarProduto(inputIdProduto.getText(), inputNomeProduto.getText(), inputQuantidade.getText(), inputValorUnitario.getText());
+                        operacoes.cadastrarProduto(inputIdProduto.getText(), inputNomeProduto.getText(),
+                                inputQuantidade.getText(), inputValorUnitario.getText());
 
                         // Limpa os campos de entrada após a operação de cadastro
                         inputIdProduto.setText("");
@@ -116,13 +130,19 @@ public class EstoqueGUI extends JPanel {
 
         });
 
-        editarButton.addActionListener(new ActionListener() {
+        atualizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ev) {
                 operacoes.atualizar(inputIdProduto.getText(), inputNomeProduto.getText(),
                         inputQuantidade.getText(), inputValorUnitario.getText());
-                JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto editado.");
+                JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto atualizado.");
             }
+        });
+
+        editarButton.addActionListener(e -> {
+            operacoes.editar(inputIdProduto.getText(), inputNomeProduto.getText(),
+                    inputQuantidade.getText(), inputValorUnitario.getText());
+            JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto editado.");
         });
 
         apagarButton.addActionListener(new ActionListener() {
@@ -135,8 +155,8 @@ public class EstoqueGUI extends JPanel {
     }
 
     private void atualizarTabela() {
-        estoque = new EstoqueDAO().listarTodos();
         tableModel.setRowCount(0);
+        estoque = new EstoqueDAO().listarTodos();
         for (Estoque estoque : estoque) {
             tableModel.addRow(new Object[] { estoque.getIdProduto(), estoque.getNomeProduto(), estoque.getQuantidade(),
                     estoque.getValorUnitario() });

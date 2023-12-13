@@ -53,8 +53,7 @@ public class EstoqueDAO {
                         rs.getString("idProduto"),
                         rs.getString("nomeProduto"),
                         rs.getString("quantidade"),
-                        rs.getString("valorUnitario")
-                        );
+                        rs.getString("valorUnitario"));
                 estoque.add(produtos); // Adiciona o objeto produtos à lista de estoque
             }
         } catch (SQLException ex) {
@@ -78,6 +77,24 @@ public class EstoqueDAO {
             stmt.setString(2, nomeProduto.trim().toUpperCase());
             stmt.setString(3, quantidade.trim());
             stmt.setString(4, valorUnitario.trim());
+            stmt.executeUpdate();
+            System.out.println("Dados inseridos com sucesso");
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao inserir dados no banco de dados.", e);
+        } finally {
+            ConnectionFactory.closeConnection(connection, stmt);
+        }
+    }
+
+    public void editar(String idProduto, String nomeProduto, String quantidade, String valorUnitario) {
+        PreparedStatement stmt = null;
+        String sql = "UPDATE produtos_supermercado SET nomeProduto = ?, quantidade = ?, valorUnitario = ? WHERE idProduto = ?";
+        try {
+            stmt = connection.prepareStatement(sql);
+            stmt.setString(4, idProduto.trim());
+            stmt.setString(1, nomeProduto.trim().toUpperCase());
+            stmt.setString(2, quantidade.trim());
+            stmt.setString(3, valorUnitario.trim());
             stmt.executeUpdate();
             System.out.println("Dados inseridos com sucesso");
         } catch (SQLException e) {

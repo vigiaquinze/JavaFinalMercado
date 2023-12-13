@@ -40,6 +40,11 @@ public class EstoqueControl {
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
     }
 
+    public void editar(String idProduto, String nomeProduto, String quantidade, String valorUnitario)  {
+        new EstoqueDAO().editar(idProduto, nomeProduto, quantidade, valorUnitario);
+        atualizarTabela();
+    }
+
     private void atualizarTabela() {
         estoque = new EstoqueDAO().listarTodos();
         tableModel.setRowCount(0);

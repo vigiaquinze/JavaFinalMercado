@@ -23,19 +23,10 @@ public class EstoqueControl {
        
     // CRUD
     public void cadastrarProduto(String idProduto, String nomeProduto, String quantidade, String valorUnitario) {
-        Estoque produtos = new Estoque(idProduto, nomeProduto, quantidade, valorUnitario);
-        new EstoqueDAO().cadastrar(idProduto, nomeProduto, quantidade, valorUnitario);
+        Estoque produtos = new Estoque(idProduto.trim(), nomeProduto.trim().toUpperCase(), quantidade.trim(), valorUnitario.trim());
+        new EstoqueDAO().cadastrar(idProduto.trim(), nomeProduto.trim().toUpperCase(), quantidade.trim(), valorUnitario.trim());
         estoque.add(produtos);
         atualizarTabela();
-    }
-
-    public void editarProduto(int linhaSelecionada, String idProduto, String nomeProduto, String quantidade, String valorUnitario) {
-        if (linhaSelecionada != -1) {
-            Estoque produtos = new Estoque(idProduto, nomeProduto, quantidade, valorUnitario);
-            new EstoqueDAO().atualizar(idProduto, nomeProduto, quantidade, valorUnitario);
-            estoque.set(linhaSelecionada, produtos);
-            atualizarTabela();
-        }
     }
 
     public void apagarProduto(String idProduto) {
@@ -54,6 +45,39 @@ public class EstoqueControl {
         tableModel.setRowCount(0);
         for (Estoque estoque : estoque) {
             tableModel.addRow(new Object[] { estoque.getIdProduto(), estoque.getNomeProduto(), estoque.getQuantidade(), estoque.getValorUnitario() });
+        }
+    }
+    
+    public boolean idJaCadastrada(String idProduto) { // Verifica se a id do produto ja não foi cadastrada
+        for (Estoque estoque : estoque) {
+            if (estoque.getIdProduto().equalsIgnoreCase(idProduto)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validarValor(String valorUnitario) { // Verifica o texto digitado no inputValorUnitario tem apenas dígitos e não é gratuito.
+        if (valorUnitario.matches("[0-9]+") && Integer.parseInt(valorUnitario) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean validarQuantidade(String quantidade) { // Verifica o texto digitado no inputQuantidade tem apenas dígitos e não é zero.
+        if (quantidade.matches("[0-9]+") && Integer.parseInt(quantidade) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean validarId(String idProduto) { // Verifica o texto digitado no inputIdProduto tem apenas dígitos.
+        if (idProduto.matches("[0-9]+")) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

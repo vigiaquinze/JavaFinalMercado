@@ -8,15 +8,12 @@ import javax.swing.table.*;
 import java.awt.event.*;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.*;
-
 
 import Model.Estoque;
 
 import Control.EstoqueControl;
 import Connection.EstoqueDAO;
-
 
 public class EstoqueGUI extends JPanel {
     private JTextField inputIdProduto;
@@ -35,7 +32,7 @@ public class EstoqueGUI extends JPanel {
         tableModel.addColumn("Nome");
         tableModel.addColumn("Quantidade");
         tableModel.addColumn("Valor Unitário");
-        
+
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         // criando os métodos de entrada de dados (input)
@@ -55,7 +52,7 @@ public class EstoqueGUI extends JPanel {
         inputPanel.add(inputNomeProduto);
         inputPanel.add(new JLabel("Quantidade:"));
         inputPanel.add(inputQuantidade);
-        inputPanel.add(new JLabel("Valor:"));
+        inputPanel.add(new JLabel("Valor: R$"));
         inputPanel.add(inputValorUnitario);
 
         inputPanel.add(cadastrarButton);
@@ -85,23 +82,44 @@ public class EstoqueGUI extends JPanel {
             }
         });
 
-        cadastrarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ev) {
-                operacoes.cadastrarProduto(inputIdProduto.getText(), inputNomeProduto.getText(),
-                        inputQuantidade.getText(), inputValorUnitario.getText());
-                inputIdProduto.setText("");
-                inputNomeProduto.setText("");
-                inputQuantidade.setText("");
-                inputValorUnitario.setText("");
-                JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto cadastrado.");
+        cadastrarButton.addActionListener(e -> {
+            try {
+                if (!inputIdProduto.getText().isEmpty() && !inputNomeProduto.getText().isEmpty()
+                        && !inputQuantidade.getText().isEmpty() && !inputValorUnitario.getText().isEmpty()) {
+                    if (operacoes.validarId(inputIdProduto.getText())
+                            && operacoes.idJaCadastrada(inputIdProduto.getText())
+                            && operacoes.validarValor(inputValorUnitario.getText())) {
+                        // Se a id não estiver cadastrada, realiza o cadastro
+                        operacoes.cadastrarProduto(inputIdProduto.getText(), inputNomeProduto.getText(), inputQuantidade.getText(), inputValorUnitario.getText());
+
+                        // Limpa os campos de entrada após a operação de cadastro
+                        inputIdProduto.setText("");
+                        inputValorUnitario.setText("");
+                        inputNomeProduto.setText("");
+                        inputQuantidade.setText("");
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Preencha os campos corretamente e tente novamente.", null,
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(inputPanel,
+                            "Preencha os campos corretamente e tente novamente.");
+                }
+            } catch (Exception err) {
+                System.out.println(err.getMessage());
+                JOptionPane.showMessageDialog(null,
+                        "Preencha os campos corretamente e tente novamente.", "ERRO",
+                        JOptionPane.WARNING_MESSAGE);
             }
+
         });
 
         editarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ev) {
-                operacoes.editarProduto(linhaSelecionada, inputIdProduto.getText(), inputNomeProduto.getText(),
+                operacoes.atualizar(inputIdProduto.getText(), inputNomeProduto.getText(),
                         inputQuantidade.getText(), inputValorUnitario.getText());
                 JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto editado.");
             }
@@ -115,11 +133,13 @@ public class EstoqueGUI extends JPanel {
             }
         });
     }
+
     private void atualizarTabela() {
         estoque = new EstoqueDAO().listarTodos();
         tableModel.setRowCount(0);
         for (Estoque estoque : estoque) {
-            tableModel.addRow(new Object[] { estoque.getIdProduto(), estoque.getNomeProduto(), estoque.getQuantidade(), estoque.getValorUnitario() });
+            tableModel.addRow(new Object[] { estoque.getIdProduto(), estoque.getNomeProduto(), estoque.getQuantidade(),
+                    estoque.getValorUnitario() });
         }
     }
 }

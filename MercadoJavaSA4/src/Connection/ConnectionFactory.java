@@ -13,7 +13,7 @@ public class ConnectionFactory {
     private static final String USUARIO = "postgres";// nome do adm do banco de dados
     private static final String SENHA = "postgres";// senha do adm do banco de dados
     // métodos
-
+    //método para iniciar a conexão com o banco de dados
     public static Connection getConnection() {
         try {
             return DriverManager.getConnection(URL, USUARIO, SENHA);

@@ -63,7 +63,7 @@ public class EstoqueControl {
     }
 
     public boolean validarValor(String valorUnitario) { // Verifica o texto digitado no inputValorUnitario tem apenas dígitos e não é gratuito.
-        if (valorUnitario.matches("[0-9]+") && Integer.parseInt(valorUnitario) > 0) {
+        if (valorUnitario.matches("^\\d*\\.\\d+|\\d+\\.\\d*$") && Double.parseDouble(valorUnitario) > 0) {
             return true;
         } else {
             return false;

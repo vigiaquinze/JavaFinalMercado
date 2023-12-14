@@ -13,19 +13,30 @@ import java.util.List;
 
 import Model.Cliente;
 
+// JPanel para lidar com a interface gráfica de vendas
 public class VendasGUI extends JPanel {
+    // Botões para várias ações
     private JButton comprar, cadastrarCliente, listarClientes, finalizarCompra, editarProduto, apagarProduto;
+
+    // Campos de texto para entrada
     private JTextField nomeProduto, idProduto, valorProduto, dataCompra, quantidadeVendida, cpfCliente;
+
+    // Modelo de tabela para exibir compras
     private DefaultTableModel tableModel;
     private JTable tabelaCompras;
+
+    // Lista para armazenar informações do cliente
     private List<Cliente> clientes;
+
+    // Variável para acompanhar o valor total da compra
     private double valorTotalCompra = 0.0;
 
+    // Construtor para a interface gráfica de vendas
     public VendasGUI() {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        // Inicializa a lista de clientes
+        // Inicializar a lista de clientes
         clientes = new ArrayList<>();
 
         // Painel para botões
@@ -41,22 +52,21 @@ public class VendasGUI extends JPanel {
         buttonPanel.add(cadastrarCliente);
         buttonPanel.add(listarClientes);
         buttonPanel.add(finalizarCompra);
-        buttonPanel.add(comprar);
         buttonPanel.add(editarProduto);
         buttonPanel.add(apagarProduto);
 
         // Painel para CPF do cliente
-        JPanel cpfPanel = new JPanel(new GridLayout(1, 3)); // Aumente para 3 colunas
+        JPanel cpfPanel = new JPanel(new GridLayout(1, 3));
         cpfPanel.add(new JLabel("CPF do Cliente"));
         cpfCliente = new JTextField(20);
         cpfPanel.add(cpfCliente);
 
-        // Adicione um JLabel para a palavra "VIP"
+        // Adicionar um JLabel para a palavra "VIP"
         JLabel labelVip = new JLabel("VIP");
-        labelVip.setForeground(Color.RED); // Defina a cor vermelha
+        labelVip.setForeground(Color.RED); // Definir a cor como vermelha
         cpfPanel.add(labelVip);
 
-        // Painel para informações de produtos
+        // Painel para informações do produto
         JPanel produtoPanel = new JPanel(new GridLayout(5, 2));
         produtoPanel.add(new JLabel("Nome do Produto"));
         nomeProduto = new JTextField(20);
@@ -78,7 +88,7 @@ public class VendasGUI extends JPanel {
         quantidadeVendida = new JTextField(20);
         produtoPanel.add(quantidadeVendida);
 
-        // Configurando a tabela para exibir as compras
+        // Configurar a tabela para exibir compras
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Cliente");
         tableModel.addColumn("Produto");
@@ -88,6 +98,8 @@ public class VendasGUI extends JPanel {
         tableModel.addColumn("Total");
         tabelaCompras = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(tabelaCompras);
+
+//////////////////////////////////////////////////////////////////////////////////DESCOMENTE A PARTIDIR DAQUI////////////////////////////////////////////////////////////////////////
 
         // Ação do botão "Comprar"
         comprar.addActionListener(new ActionListener() {
@@ -131,6 +143,7 @@ public class VendasGUI extends JPanel {
                 }
             }
         });
+
         // Ação do botão "Editar Produto"
         editarProduto.addActionListener(new ActionListener() {
             @Override
@@ -147,6 +160,7 @@ public class VendasGUI extends JPanel {
             }
         });
 
+        // Adicionar componentes ao painel
         add(new JLabel("Estoque de Vendas"));
         add(buttonPanel);
         add(cpfPanel);
@@ -156,58 +170,73 @@ public class VendasGUI extends JPanel {
         add(scrollPane);
     }
 
+    // Método para adicionar uma compra à tabela
     private void adicionarCompraNaTabela() {
+        // Extrair informações do produto dos campos de entrada
         String produto = nomeProduto.getText();
         String idProdutoText = idProduto.getText();
         double valorProdutoDouble;
         try {
+            // Analisar o valor do produto, lidando com possíveis problemas de formato numérico
             valorProdutoDouble = Double.parseDouble(valorProduto.getText().replace(",", "."));
         } catch (NumberFormatException e) {
+            // Exibir uma mensagem de erro se o valor não for válido
             JOptionPane.showMessageDialog(this, "Digite um valor válido para o produto.", "Erro",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
         int quantidadeVendidaInt;
         try {
+            // Analisar a quantidade, lidando com possíveis problemas de formato numérico
             quantidadeVendidaInt = Integer.parseInt(quantidadeVendida.getText());
         } catch (NumberFormatException e) {
+            // Exibir uma mensagem de erro se a quantidade não for válida
             JOptionPane.showMessageDialog(this, "Digite uma quantidade válida para o produto.", "Erro",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+        // Recuperar informações do cliente
         String clienteNome = buscarNomeClientePorCpf(cpfCliente.getText());
         Cliente cliente = buscarClientePorCpf(cpfCliente.getText());
 
+        // Aplicar um desconto de 20% se o cliente for VIP
         if (cliente != null && cliente.isVip()) {
-            valorProdutoDouble *= 0.8; // Aplica desconto de 20% se o cliente for VIP
+            valorProdutoDouble *= 0.8;
         }
 
+        // Calcular o valor total
         double valorTotal = valorProdutoDouble * quantidadeVendidaInt;
 
+        // Adicionar a compra à tabela
         tableModel.addRow(
                 new Object[] { clienteNome + (cliente != null && cliente.isVip() ? " VIP" : ""), produto, idProdutoText,
                         formatarMoeda(valorProdutoDouble), quantidadeVendidaInt, formatarMoeda(valorTotal) });
 
-        // Adiciona o valor total ao total da compra
+        // Adicionar o valor total ao total da compra
         valorTotalCompra += valorTotal;
 
+        // Limpar os campos de entrada
         limparCampos();
     }
 
+    // Método para calcular o valor total da compra
     private double calcularValorTotalCompra() {
         double total = 0.0;
         for (int i = 0; i < tableModel.getRowCount(); i++) {
+            // Analisar o valor total da tabela, lidando com possíveis problemas de formato numérico
             String valorTotalStr = tableModel.getValueAt(i, 5).toString();
             total += Double.parseDouble(valorTotalStr.replace("R$ ", "").replace(",", "."));
         }
         return total;
     }
 
+    // Método para verificar se o cliente é VIP
     private boolean clienteEhVip() {
         Cliente cliente = buscarClientePorCpf(cpfCliente.getText());
         return cliente != null && cliente.isVip();
     }
 
+    // Método para limpar os campos de entrada
     private void limparCampos() {
         nomeProduto.setText("");
         idProduto.setText("");
@@ -217,17 +246,24 @@ public class VendasGUI extends JPanel {
         cpfCliente.setText("");
     }
 
+    // Método para finalizar a compra
     private void finalizarCompra() {
+        // Calcular o valor total da compra
         valorTotalCompra = calcularValorTotalCompra();
 
+        // Aplicar um desconto de 20% se o cliente for VIP
         if (clienteEhVip()) {
             valorTotalCompra *= 0.8;
         }
 
+        // Limpar os campos de entrada
         limparCampos();
+
+        // Exibir opções de pagamento
         exibirOpcoesPagamento();
     }
 
+    // Método para exibir opções de pagamento
     private void exibirOpcoesPagamento() {
         JFrame pagamentoFrame = new JFrame("Opções de Pagamento");
         pagamentoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -274,22 +310,25 @@ public class VendasGUI extends JPanel {
         pagamentoFrame.setVisible(true);
     }
 
+    // Método para processar o pagamento
     private void processarPagamento(String formaPagamento) {
         JOptionPane.showMessageDialog(this, "Pagamento de R$ " + formatarMoeda(valorTotalCompra) +
                 " realizado com sucesso por " + formaPagamento, "Compra Finalizada", JOptionPane.INFORMATION_MESSAGE);
 
-        // Zera o valor total da compra após o pagamento ser processado
+        // Zerar o valor total da compra após o pagamento ser processado
         valorTotalCompra = 0.0;
 
-        // Limpa a tabela de compras
+        // Limpar a tabela de compras
         tableModel.setRowCount(0);
     }
 
+    // Método para formatar um valor como moeda
     private String formatarMoeda(double valor) {
         DecimalFormat formatoMoeda = new DecimalFormat("#,##0.00");
         return "R$ " + formatoMoeda.format(valor);
     }
 
+    // Método para buscar o nome do cliente pelo CPF
     private String buscarNomeClientePorCpf(String cpf) {
         for (Cliente cliente : clientes) {
             if (cliente.getCpf().equals(cpf)) {
@@ -299,6 +338,7 @@ public class VendasGUI extends JPanel {
         return "";
     }
 
+    // Método para buscar um cliente pelo CPF
     private Cliente buscarClientePorCpf(String cpf) {
         for (Cliente cliente : clientes) {
             if (cliente.getCpf().equals(cpf)) {
@@ -308,6 +348,7 @@ public class VendasGUI extends JPanel {
         return null;
     }
 
+    // Método para listar clientes cadastrados
     private void listarClientesCadastrados() {
         StringBuilder clientesInfo = new StringBuilder("Clientes Cadastrados:\n");
 
@@ -320,6 +361,7 @@ public class VendasGUI extends JPanel {
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
+    // Método para cadastrar um novo cliente
     private void cadastrarNovoCliente() {
         String nome = JOptionPane.showInputDialog(this, "Digite o nome do cliente:");
         String cpf = JOptionPane.showInputDialog(this, "Digite o CPF do cliente:");
@@ -333,6 +375,7 @@ public class VendasGUI extends JPanel {
         }
     }
 
+    // Método para editar um produto na tabela
     private void editarProdutoNaTabela() {
         // Implemente a lógica para editar os valores na tabela com base na linha
         // selecionada
@@ -348,6 +391,7 @@ public class VendasGUI extends JPanel {
         }
     }
 
+    // Método para apagar um produto da tabela
     private void apagarProdutoDaTabela() {
         // Implemente a lógica para remover a linha selecionada da tabela
         int selectedRow = tabelaCompras.getSelectedRow();
@@ -359,3 +403,8 @@ public class VendasGUI extends JPanel {
         }
     }
 }
+
+
+
+
+

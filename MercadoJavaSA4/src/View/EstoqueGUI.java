@@ -27,7 +27,7 @@ public class EstoqueGUI extends JPanel {
     private JButton cadastrarButton, atualizarButton, editarButton, apagarButton;
 
     public EstoqueGUI() {
-        //Criando a tabela e adicionando as colunas
+        // Criando a tabela e adicionando as colunas
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
         tableModel.addColumn("Nome");
@@ -44,13 +44,13 @@ public class EstoqueGUI extends JPanel {
         inputQuantidade = new JTextField(10);
         inputValorUnitario = new JTextField(10);
 
-        //Adicionando os botões
+        // Adicionando os botões
         cadastrarButton = new JButton("Cadastrar");
         atualizarButton = new JButton("Atualizar");
         editarButton = new JButton("Editar");
         apagarButton = new JButton("Apagar");
 
-        //Estilizando os botões
+        // Estilizando os botões
         cadastrarButton.setBackground(new Color(8, 24, 20));
         atualizarButton.setBackground(new Color(201, 168, 82));
         editarButton.setBackground(new Color(136, 114, 58));
@@ -66,7 +66,7 @@ public class EstoqueGUI extends JPanel {
         editarButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
         apagarButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-        //Adicionando os inputs
+        // Adicionando os inputs
         JPanel inputPanel = new JPanel();
         inputPanel.add(new JLabel("ID:"));
         inputPanel.add(inputIdProduto);
@@ -77,18 +77,18 @@ public class EstoqueGUI extends JPanel {
         inputPanel.add(new JLabel("Valor: R$"));
         inputPanel.add(inputValorUnitario);
 
-        //Estilizando os inputs
-        inputPanel.setBackground(new Color (139, 234, 210));
-        inputIdProduto.setBackground(new Color (89, 184, 160));
+        // Estilizando os inputs
+        inputPanel.setBackground(new Color(139, 234, 210));
+        inputIdProduto.setBackground(new Color(169, 255, 240));
         inputIdProduto.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        inputNomeProduto.setBackground(new Color (89, 184, 160));
+        inputNomeProduto.setBackground(new Color(169, 255, 240));
         inputNomeProduto.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        inputQuantidade.setBackground(new Color (89, 184, 160));
+        inputQuantidade.setBackground(new Color(169, 255, 240));
         inputQuantidade.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        inputValorUnitario.setBackground(new Color (89, 184, 160));
+        inputValorUnitario.setBackground(new Color(169, 255, 240));
         inputValorUnitario.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-        //Adicionando os botões ao painel de inputs
+        // Adicionando os botões ao painel de inputs
         inputPanel.add(cadastrarButton);
         inputPanel.add(atualizarButton);
         inputPanel.add(editarButton);
@@ -96,12 +96,12 @@ public class EstoqueGUI extends JPanel {
 
         atualizarTabela();
 
-        //Definindo o Layout
+        // Definindo o Layout
         setLayout(new BorderLayout());
         add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        //Botões de eventos
+        // Botões de eventos
         EstoqueControl operacoes = new EstoqueControl(estoque, tableModel, table);
 
         table.addMouseListener(new MouseAdapter() {
@@ -170,8 +170,13 @@ public class EstoqueGUI extends JPanel {
         apagarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ev) {
-                operacoes.apagarProduto(inputIdProduto.getText());
-                JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto removido.");
+                if (linhaSelecionada != -1) {
+                    operacoes.apagarProduto(inputIdProduto.getText());
+                    JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto removido.");
+                }
+                else {
+                    JOptionPane.showMessageDialog(getComponentPopupMenu(), "Digite uma ID ou selecione um produto para ser excluído.");
+                }
             }
         });
     }

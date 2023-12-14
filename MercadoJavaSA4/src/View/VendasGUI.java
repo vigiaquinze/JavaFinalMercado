@@ -12,10 +12,9 @@ import java.util.Date;
 import java.util.List;
 
 import Model.Cliente;
-import Model.Vendas;
 
 public class VendasGUI extends JPanel {
-    private JButton comprar, cadastrarCliente, listarClientes, finalizarCompra;
+    private JButton comprar, cadastrarCliente, listarClientes, finalizarCompra, editarProduto, apagarProduto;
     private JTextField nomeProduto, idProduto, valorProduto, dataCompra, quantidadeVendida, cpfCliente;
     private DefaultTableModel tableModel;
     private JTable tabelaCompras;
@@ -35,11 +34,16 @@ public class VendasGUI extends JPanel {
         cadastrarCliente = new JButton("Cadastrar Cliente");
         listarClientes = new JButton("Listar Clientes");
         finalizarCompra = new JButton("Finalizar Compra");
+        editarProduto = new JButton("Editar Produto");
+        apagarProduto = new JButton("Apagar Produto");
 
         buttonPanel.add(comprar);
         buttonPanel.add(cadastrarCliente);
         buttonPanel.add(listarClientes);
         buttonPanel.add(finalizarCompra);
+        buttonPanel.add(comprar);
+        buttonPanel.add(editarProduto);
+        buttonPanel.add(apagarProduto);
 
         // Painel para CPF do cliente
         JPanel cpfPanel = new JPanel(new GridLayout(1, 3)); // Aumente para 3 colunas
@@ -85,50 +89,63 @@ public class VendasGUI extends JPanel {
         tabelaCompras = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(tabelaCompras);
 
-///////////////////////////////////////////////////////////////////BASTA DESCOMENTAR O CODIGO ABAIXO QUE FUNCIOA/////////////////////////////////////////////////////////////////////////
+        // Ação do botão "Comprar"
+        comprar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                adicionarCompraNaTabela();
+            }
+        });
 
-    //     // Ação do botão "Comprar"
-    //     comprar.addActionListener(new ActionListener() {
-    //         @Override
-    //         public void actionPerformed(ActionEvent e) {
-    //             adicionarCompraNaTabela();
-    //         }
-    //     });
+        // Ação do botão "Cadastrar Cliente"
+        cadastrarCliente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cadastrarNovoCliente();
+            }
+        });
 
-    //     // Ação do botão "Cadastrar Cliente"
-    //     cadastrarCliente.addActionListener(new ActionListener() {
-    //         @Override
-    //         public void actionPerformed(ActionEvent e) {
-    //             cadastrarNovoCliente();
-    //         }
-    //     });
+        // Ação do botão "Listar Clientes"
+        listarClientes.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listarClientesCadastrados();
+            }
+        });
 
-    //     // Ação do botão "Listar Clientes"
-    //     listarClientes.addActionListener(new ActionListener() {
-    //         @Override
-    //         public void actionPerformed(ActionEvent e) {
-    //             listarClientesCadastrados();
-    //         }
-    //     });
+        // Ação do botão "Finalizar Compra"
+        finalizarCompra.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                finalizarCompra();
+            }
+        });
 
-    //     // Ação do botão "Finalizar Compra"
-    //     finalizarCompra.addActionListener(new ActionListener() {
-    //         @Override
-    //         public void actionPerformed(ActionEvent e) {
-    //             finalizarCompra();
-    //         }
-    //     });
+        // Dois cliques para inserir a data do dia
+        dataCompra.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    dataCompra.setText(dateFormat.format(new Date()));
+                }
+            }
+        });
+        // Ação do botão "Editar Produto"
+        editarProduto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editarProdutoNaTabela();
+            }
+        });
 
-    //     // Dois cliques para inserir a data do dia
-    //     dataCompra.addMouseListener(new java.awt.event.MouseAdapter() {
-    //         @Override
-    //         public void mouseClicked(java.awt.event.MouseEvent evt) {
-    //             if (evt.getClickCount() == 2) {
-    //                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    //                 dataCompra.setText(dateFormat.format(new Date()));
-    //             }
-    //         }
-    //     });
+        // Ação do botão "Apagar Produto"
+        apagarProduto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                apagarProdutoDaTabela();
+            }
+        });
 
         add(new JLabel("Estoque de Vendas"));
         add(buttonPanel);
@@ -137,183 +154,208 @@ public class VendasGUI extends JPanel {
         add(produtoPanel);
         add(new JLabel("Tabela de Compras"));
         add(scrollPane);
-    // }
+    }
 
-    // private void adicionarCompraNaTabela() {
-    //     String produto = nomeProduto.getText();
-    //     String idProdutoText = idProduto.getText();
-    //     double valorProdutoDouble;
-    //     try {
-    //         valorProdutoDouble = Double.parseDouble(valorProduto.getText().replace(",", "."));
-    //     } catch (NumberFormatException e) {
-    //         JOptionPane.showMessageDialog(this, "Digite um valor válido para o produto.", "Erro",
-    //                 JOptionPane.ERROR_MESSAGE);
-    //         return;
-    //     }
-    //     int quantidadeVendidaInt;
-    //     try {
-    //         quantidadeVendidaInt = Integer.parseInt(quantidadeVendida.getText());
-    //     } catch (NumberFormatException e) {
-    //         JOptionPane.showMessageDialog(this, "Digite uma quantidade válida para o produto.", "Erro",
-    //                 JOptionPane.ERROR_MESSAGE);
-    //         return;
-    //     }
-    //     String clienteNome = buscarNomeClientePorCpf(cpfCliente.getText());
-    //     Cliente cliente = buscarClientePorCpf(cpfCliente.getText());
+    private void adicionarCompraNaTabela() {
+        String produto = nomeProduto.getText();
+        String idProdutoText = idProduto.getText();
+        double valorProdutoDouble;
+        try {
+            valorProdutoDouble = Double.parseDouble(valorProduto.getText().replace(",", "."));
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Digite um valor válido para o produto.", "Erro",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int quantidadeVendidaInt;
+        try {
+            quantidadeVendidaInt = Integer.parseInt(quantidadeVendida.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Digite uma quantidade válida para o produto.", "Erro",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String clienteNome = buscarNomeClientePorCpf(cpfCliente.getText());
+        Cliente cliente = buscarClientePorCpf(cpfCliente.getText());
 
-    //     if (cliente != null && cliente.isVip()) {
-    //         valorProdutoDouble *= 0.8; // Aplica desconto de 20% se o cliente for VIP
-    //     }
+        if (cliente != null && cliente.isVip()) {
+            valorProdutoDouble *= 0.8; // Aplica desconto de 20% se o cliente for VIP
+        }
 
-    //     double valorTotal = valorProdutoDouble * quantidadeVendidaInt;
+        double valorTotal = valorProdutoDouble * quantidadeVendidaInt;
 
-    //     tableModel.addRow(new Object[]{clienteNome + (cliente != null && cliente.isVip() ? " VIP" : ""), produto, idProdutoText,
-    //             formatarMoeda(valorProdutoDouble), quantidadeVendidaInt, formatarMoeda(valorTotal)});
+        tableModel.addRow(
+                new Object[] { clienteNome + (cliente != null && cliente.isVip() ? " VIP" : ""), produto, idProdutoText,
+                        formatarMoeda(valorProdutoDouble), quantidadeVendidaInt, formatarMoeda(valorTotal) });
 
-    //     // Adiciona o valor total ao total da compra
-    //     valorTotalCompra += valorTotal;
+        // Adiciona o valor total ao total da compra
+        valorTotalCompra += valorTotal;
 
-    //     limparCampos();
-    // }
+        limparCampos();
+    }
 
-    // private double calcularValorTotalCompra() {
-    //     double total = 0.0;
-    //     for (int i = 0; i < tableModel.getRowCount(); i++) {
-    //         String valorTotalStr = tableModel.getValueAt(i, 5).toString();
-    //         total += Double.parseDouble(valorTotalStr.replace("R$ ", "").replace(",", "."));
-    //     }
-    //     return total;
-    // }
+    private double calcularValorTotalCompra() {
+        double total = 0.0;
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String valorTotalStr = tableModel.getValueAt(i, 5).toString();
+            total += Double.parseDouble(valorTotalStr.replace("R$ ", "").replace(",", "."));
+        }
+        return total;
+    }
 
-    // private boolean clienteEhVip() {
-    //     Cliente cliente = buscarClientePorCpf(cpfCliente.getText());
-    //     return cliente != null && cliente.isVip();
-    // }
+    private boolean clienteEhVip() {
+        Cliente cliente = buscarClientePorCpf(cpfCliente.getText());
+        return cliente != null && cliente.isVip();
+    }
 
-    // private void limparCampos() {
-    //     nomeProduto.setText("");
-    //     idProduto.setText("");
-    //     valorProduto.setText("");
-    //     dataCompra.setText("");
-    //     quantidadeVendida.setText("");
-    //     cpfCliente.setText("");
-    // }
-    
+    private void limparCampos() {
+        nomeProduto.setText("");
+        idProduto.setText("");
+        valorProduto.setText("");
+        dataCompra.setText("");
+        quantidadeVendida.setText("");
+        cpfCliente.setText("");
+    }
 
+    private void finalizarCompra() {
+        valorTotalCompra = calcularValorTotalCompra();
 
-    // private void finalizarCompra() {
-    //     valorTotalCompra = calcularValorTotalCompra();
+        if (clienteEhVip()) {
+            valorTotalCompra *= 0.8;
+        }
 
-    //     if (clienteEhVip()) {
-    //         valorTotalCompra *= 0.8;
-    //     }
+        limparCampos();
+        exibirOpcoesPagamento();
+    }
 
-    //     limparCampos();
-    //     exibirOpcoesPagamento();
-    // }
+    private void exibirOpcoesPagamento() {
+        JFrame pagamentoFrame = new JFrame("Opções de Pagamento");
+        pagamentoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        pagamentoFrame.setSize(400, 200);
 
-    // private void exibirOpcoesPagamento() {
-    //     JFrame pagamentoFrame = new JFrame("Opções de Pagamento");
-    //     pagamentoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    //     pagamentoFrame.setSize(400, 200);
+        JPanel pagamentoPanel = new JPanel();
+        pagamentoPanel.setLayout(new GridLayout(4, 1));
 
-    //     JPanel pagamentoPanel = new JPanel();
-    //     pagamentoPanel.setLayout(new GridLayout(4, 1));
+        JLabel labelPagamento = new JLabel("Escolha a forma de pagamento:");
+        JButton dinheiroButton = new JButton("Dinheiro");
+        JButton debitoButton = new JButton("Cartão de Débito");
+        JButton creditoButton = new JButton("Cartão de Crédito");
 
-    //     JLabel labelPagamento = new JLabel("Escolha a forma de pagamento:");
-    //     JButton dinheiroButton = new JButton("Dinheiro");
-    //     JButton debitoButton = new JButton("Cartão de Débito");
-    //     JButton creditoButton = new JButton("Cartão de Crédito");
+        dinheiroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                processarPagamento("Dinheiro");
+                pagamentoFrame.dispose();
+            }
+        });
 
-    //     dinheiroButton.addActionListener(new ActionListener() {
-    //         @Override
-    //         public void actionPerformed(ActionEvent e) {
-    //             processarPagamento("Dinheiro");
-    //             pagamentoFrame.dispose();
-    //         }
-    //     });
+        debitoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                processarPagamento("Cartão de Débito");
+                pagamentoFrame.dispose();
+            }
+        });
 
-    //     debitoButton.addActionListener(new ActionListener() {
-    //         @Override
-    //         public void actionPerformed(ActionEvent e) {
-    //             processarPagamento("Cartão de Débito");
-    //             pagamentoFrame.dispose();
-    //         }
-    //     });
+        creditoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                processarPagamento("Cartão de Crédito");
+                pagamentoFrame.dispose();
+            }
+        });
 
-    //     creditoButton.addActionListener(new ActionListener() {
-    //         @Override
-    //         public void actionPerformed(ActionEvent e) {
-    //             processarPagamento("Cartão de Crédito");
-    //             pagamentoFrame.dispose();
-    //         }
-    //     });
+        pagamentoPanel.add(labelPagamento);
+        pagamentoPanel.add(dinheiroButton);
+        pagamentoPanel.add(debitoButton);
+        pagamentoPanel.add(creditoButton);
 
-    //     pagamentoPanel.add(labelPagamento);
-    //     pagamentoPanel.add(dinheiroButton);
-    //     pagamentoPanel.add(debitoButton);
-    //     pagamentoPanel.add(creditoButton);
+        pagamentoFrame.getContentPane().add(pagamentoPanel);
+        pagamentoFrame.setVisible(true);
+    }
 
-    //     pagamentoFrame.getContentPane().add(pagamentoPanel);
-    //     pagamentoFrame.setVisible(true);
-    // }
+    private void processarPagamento(String formaPagamento) {
+        JOptionPane.showMessageDialog(this, "Pagamento de R$ " + formatarMoeda(valorTotalCompra) +
+                " realizado com sucesso por " + formaPagamento, "Compra Finalizada", JOptionPane.INFORMATION_MESSAGE);
 
-    // private void processarPagamento(String formaPagamento) {
-    //     JOptionPane.showMessageDialog(this, "Pagamento de R$ " + formatarMoeda(valorTotalCompra) +
-    //             " realizado com sucesso por " + formaPagamento, "Compra Finalizada", JOptionPane.INFORMATION_MESSAGE);
+        // Zera o valor total da compra após o pagamento ser processado
+        valorTotalCompra = 0.0;
 
-    //     // Zera o valor total da compra após o pagamento ser processado
-    //     valorTotalCompra = 0.0;
+        // Limpa a tabela de compras
+        tableModel.setRowCount(0);
+    }
 
-    //     // Limpa a tabela de compras
-    //     tableModel.setRowCount(0);
-    // }
+    private String formatarMoeda(double valor) {
+        DecimalFormat formatoMoeda = new DecimalFormat("#,##0.00");
+        return "R$ " + formatoMoeda.format(valor);
+    }
 
-    // private String formatarMoeda(double valor) {
-    //     DecimalFormat formatoMoeda = new DecimalFormat("#,##0.00");
-    //     return "R$ " + formatoMoeda.format(valor);
-    // }
+    private String buscarNomeClientePorCpf(String cpf) {
+        for (Cliente cliente : clientes) {
+            if (cliente.getCpf().equals(cpf)) {
+                return cliente.getNome();
+            }
+        }
+        return "";
+    }
 
-    // private String buscarNomeClientePorCpf(String cpf) {
-    //     for (Cliente cliente : clientes) {
-    //         if (cliente.getCpf().equals(cpf)) {
-    //             return cliente.getNome();
-    //         }
-    //     }
-    //     return "";
-    // }
+    private Cliente buscarClientePorCpf(String cpf) {
+        for (Cliente cliente : clientes) {
+            if (cliente.getCpf().equals(cpf)) {
+                return cliente;
+            }
+        }
+        return null;
+    }
 
-    // private Cliente buscarClientePorCpf(String cpf) {
-    //     for (Cliente cliente : clientes) {
-    //         if (cliente.getCpf().equals(cpf)) {
-    //             return cliente;
-    //         }
-    //     }
-    //     return null;
-    // }
+    private void listarClientesCadastrados() {
+        StringBuilder clientesInfo = new StringBuilder("Clientes Cadastrados:\n");
 
-    // private void listarClientesCadastrados() {
-    //     StringBuilder clientesInfo = new StringBuilder("Clientes Cadastrados:\n");
+        for (Cliente cliente : clientes) {
+            clientesInfo.append("CPF: ").append(cliente.getCpf()).append(", Nome: ").append(cliente.getNome())
+                    .append(", VIP: ").append(cliente.isVip() ? "Sim" : "Não").append("\n");
+        }
 
-    //     for (Cliente cliente : clientes) {
-    //         clientesInfo.append("CPF: ").append(cliente.getCpf()).append(", Nome: ").append(cliente.getNome())
-    //                 .append(", VIP: ").append(cliente.isVip() ? "Sim" : "Não").append("\n");
-    //     }
+        JOptionPane.showMessageDialog(this, clientesInfo.toString(), "Lista de Clientes",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
 
-    //     JOptionPane.showMessageDialog(this, clientesInfo.toString(), "Lista de Clientes",
-    //             JOptionPane.INFORMATION_MESSAGE);
-    // }
+    private void cadastrarNovoCliente() {
+        String nome = JOptionPane.showInputDialog(this, "Digite o nome do cliente:");
+        String cpf = JOptionPane.showInputDialog(this, "Digite o CPF do cliente:");
+        boolean vip = JOptionPane.showConfirmDialog(this, "O cliente é VIP?", "Cadastro de Cliente",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
 
-    // private void cadastrarNovoCliente() {
-    //     String nome = JOptionPane.showInputDialog(this, "Digite o nome do cliente:");
-    //     String cpf = JOptionPane.showInputDialog(this, "Digite o CPF do cliente:");
-    //     boolean vip = JOptionPane.showConfirmDialog(this, "O cliente é VIP?", "Cadastro de Cliente",
-    //             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+        if (nome != null && cpf != null) {
+            clientes.add(new Cliente(nome, cpf, vip));
+            JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!", "Cadastro de Cliente",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
 
-    //     if (nome != null && cpf != null) {
-    //         clientes.add(new Cliente(nome, cpf, vip));
-    //         JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!", "Cadastro de Cliente",
-    //                 JOptionPane.INFORMATION_MESSAGE);
-    //     }
+    private void editarProdutoNaTabela() {
+        // Implemente a lógica para editar os valores na tabela com base na linha
+        // selecionada
+        int selectedRow = tabelaCompras.getSelectedRow();
+        if (selectedRow != -1) {
+            // Exemplo: nomeProduto.setText(tableModel.getValueAt(selectedRow,
+            // 1).toString());
+            // idProduto.setText(tableModel.getValueAt(selectedRow, 2).toString());
+            // ... (outros campos)
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um produto para editar.", "Aviso",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void apagarProdutoDaTabela() {
+        // Implemente a lógica para remover a linha selecionada da tabela
+        int selectedRow = tabelaCompras.getSelectedRow();
+        if (selectedRow != -1) {
+            tableModel.removeRow(selectedRow);
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um produto para apagar.", "Aviso",
+                    JOptionPane.WARNING_MESSAGE);
+        }
     }
 }

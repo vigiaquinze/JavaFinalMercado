@@ -174,6 +174,9 @@ public class EstoqueGUI extends JPanel {
                     operacoes.apagarProduto(inputIdProduto.getText());
                     JOptionPane.showMessageDialog(getComponentPopupMenu(), "Produto removido.");
                 }
+                else {
+                    JOptionPane.showMessageDialog(getComponentPopupMenu(), "Digite uma ID ou selecione um produto para ser excluído.");
+                }
             }
         });
     }

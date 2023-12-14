@@ -79,13 +79,13 @@ public class EstoqueGUI extends JPanel {
 
         //Estilizando os inputs
         inputPanel.setBackground(new Color (139, 234, 210));
-        inputIdProduto.setBackground(new Color (89, 184, 160));
+        inputIdProduto.setBackground(new Color (169, 255, 240));
         inputIdProduto.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        inputNomeProduto.setBackground(new Color (89, 184, 160));
+        inputNomeProduto.setBackground(new Color (169, 255, 240));
         inputNomeProduto.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        inputQuantidade.setBackground(new Color (89, 184, 160));
+        inputQuantidade.setBackground(new Color (169, 255, 240));
         inputQuantidade.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        inputValorUnitario.setBackground(new Color (89, 184, 160));
+        inputValorUnitario.setBackground(new Color (169, 255, 240));
         inputValorUnitario.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         //Adicionando os botões ao painel de inputs

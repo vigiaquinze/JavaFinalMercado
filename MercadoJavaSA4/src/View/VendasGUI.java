@@ -48,6 +48,49 @@ public class VendasGUI extends JPanel {
         editarProduto = new JButton("Editar Produto");
         apagarProduto = new JButton("Apagar Produto");
 
+        // Estilizando os botões
+        comprar.setBackground(new Color(8, 24, 20));
+        cadastrarCliente.setBackground(new Color(201, 168, 82));
+        listarClientes.setBackground(new Color(136, 114, 58));
+        finalizarCompra.setBackground(new Color(239, 97, 49));
+        editarProduto.setBackground(new Color(136, 114, 58));
+        apagarProduto.setBackground(new Color(239, 97, 49));
+
+        comprar.setForeground(new Color(255, 255, 255));
+        cadastrarCliente.setForeground(new Color(255, 255, 255));
+        listarClientes.setForeground(new Color(255, 255, 255));
+        finalizarCompra.setForeground(new Color(255, 255, 255));
+        editarProduto.setForeground(new Color(255, 255, 255));
+        apagarProduto.setForeground(new Color(255, 255, 255));
+
+        comprar.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        cadastrarCliente.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        listarClientes.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        finalizarCompra.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        editarProduto.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        apagarProduto.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+        // Estilizando os inputs
+        buttonPanel.setBackground(new Color(139, 234, 210));
+
+        comprar.setBackground(new Color(169, 255, 240));
+        comprar.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+        cadastrarCliente.setBackground(new Color(169, 255, 240));
+        cadastrarCliente.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+        listarClientes.setBackground(new Color(169, 255, 240));
+        listarClientes.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+        finalizarCompra.setBackground(new Color(169, 255, 240));
+        finalizarCompra.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+        editarProduto.setBackground(new Color(169, 255, 240));
+        editarProduto.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+        apagarProduto.setBackground(new Color(169, 255, 240));
+        apagarProduto.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
         buttonPanel.add(comprar);
         buttonPanel.add(cadastrarCliente);
         buttonPanel.add(listarClientes);
@@ -98,8 +141,6 @@ public class VendasGUI extends JPanel {
         tableModel.addColumn("Total");
         tabelaCompras = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(tabelaCompras);
-
-//////////////////////////////////////////////////////////////////////////////////DESCOMENTE A PARTIDIR DAQUI////////////////////////////////////////////////////////////////////////
 
         // Ação do botão "Comprar"
         comprar.addActionListener(new ActionListener() {
@@ -177,7 +218,8 @@ public class VendasGUI extends JPanel {
         String idProdutoText = idProduto.getText();
         double valorProdutoDouble;
         try {
-            // Analisar o valor do produto, lidando com possíveis problemas de formato numérico
+            // Analisar o valor do produto, lidando com possíveis problemas de formato
+            // numérico
             valorProdutoDouble = Double.parseDouble(valorProduto.getText().replace(",", "."));
         } catch (NumberFormatException e) {
             // Exibir uma mensagem de erro se o valor não for válido
@@ -223,7 +265,8 @@ public class VendasGUI extends JPanel {
     private double calcularValorTotalCompra() {
         double total = 0.0;
         for (int i = 0; i < tableModel.getRowCount(); i++) {
-            // Analisar o valor total da tabela, lidando com possíveis problemas de formato numérico
+            // Analisar o valor total da tabela, lidando com possíveis problemas de formato
+            // numérico
             String valorTotalStr = tableModel.getValueAt(i, 5).toString();
             total += Double.parseDouble(valorTotalStr.replace("R$ ", "").replace(",", "."));
         }
@@ -403,8 +446,3 @@ public class VendasGUI extends JPanel {
         }
     }
 }
-
-
-
-
-
